@@ -1,0 +1,4 @@
+[submodele "pin-front"]
+	branch = master
+[submodele "pin-back"]
+	branch = master
