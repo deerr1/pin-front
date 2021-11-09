@@ -20,7 +20,7 @@
           bg-color="white"
           filled
           v-model="contact_data"
-          label="почта\телефон*"
+          label="Почта*"
           lazy-rules
           :rules="[
             (val) =>
@@ -52,8 +52,9 @@
           ]"
         />
         <div class="btn">
-          <q-btn label="Регистрация" type="submit" color="orange" />
+          <q-btn @click="registr()" label="Регистрация" type="submit" color="orange" />
           <q-btn
+            @click="this.$router.push('Login')"
             label="Есть аккаунт? Войти"
             color="white"
             flat
@@ -68,28 +69,32 @@
 <script lang="ts">
 import { useQuasar } from "quasar";
 import { ref } from "vue";
+import store from '@/store';
+import router from '@/router';
 
 export default {
   setup() {
-    const login = ref(null);
-    const contact_data = ref(null);
-    const pass = ref(null);
-    const repitpass = ref(null);
+    const login = ref<string|null>(null);
+    const contact_data = ref<string|null>(null);
+    const pass = ref<string|null>(null);
+    const repitpass = ref<string|null>(null);
+
+    function registr(){
+          let data = {"email": contact_data.value, "username": login.value, "password": pass.value}
+          store.dispatch("registration", data)
+          .then(()=> router.push('/login'))
+          .catch(err=> console.log(err))
+
+      };
 
     return {
       login,
       contact_data,
       pass,
       repitpass,
-
-      onReset() {
-        login.value = null;
-        contact_data.value = null;
-        pass.value = null;
-        repitpass.value = null;
-      },
+      registr
     };
-  },
+  }
 };
 </script>
 

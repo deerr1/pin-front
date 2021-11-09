@@ -7,7 +7,7 @@
         <q-input
           bg-color="white"
           filled
-          v-model="login"
+          v-model="username"
           label="Логин*"
           lazy-rules
           :rules="[
@@ -28,8 +28,9 @@
         />
 
         <div class="btn">
-          <q-btn @click="auth" label="Войти" type="submit" color="orange" />
+          <q-btn @click="login()" label="Войти" type="submit" color="orange" />
           <q-btn
+           @click="this.$router.push('Registration')"
             label="Нет аккаунта? Зарегестрироваться"
             color="white"
             flat
@@ -43,23 +44,27 @@
 
 <script lang="ts">
 import { ref } from "vue";
-import axios from 'axios';
+import store from '@/store';
+import router from '@/router';
+
 
 export default {
   setup() {
-    const login = ref<string|null>(null);
+    const username = ref<string|null>(null);
     const pass = ref<string|null>(null);
+
+    function login(){
+          let data = {"username": username.value, "password": pass.value}
+          store.dispatch('login', data)
+          .then(() => router.push("/"))
+          .catch(err => console.log(err));
+
+      };
     return {
-      login,
+      username,
       pass,
+      login
     };
-
-
-  },
-  methods: {
-      auth(){
-          axios.post("")
-      }
   }
 };
 </script>
