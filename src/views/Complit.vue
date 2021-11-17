@@ -1,7 +1,7 @@
 <template>
     <div class="fixed-center">
         <div class="q-my-lg">Вы на сайте</div>
-        <q-btn v-if="isLogedIn.value" @click="login()" label="Войти" type="submit" color="orange" />
+        <q-btn v-if="isLogedIn" @click="login()" label="Войти" type="submit" color="orange" />
         <q-btn v-else @click="logout()" label="Выйти" type="submit" color="orange" />
     </div>
 </template>

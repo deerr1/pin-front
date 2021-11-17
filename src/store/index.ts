@@ -10,14 +10,14 @@ interface State {
 
 const state = reactive<State>({
   status: localStorage.getItem('token')!='' ? 'succes' : '' as string,
-  accessToken: localStorage.getItem('token') || '' as string,
+  accessToken: localStorage.getItem('access_token') || '' as string,
   refreshToken: localStorage.getItem('refresh_token') || '' as string
 })
 
 export default createStore({
   state: state,
   getters:{
-    isLoggedIn: state => !!state.accessToken,
+    isLoggedIn: state => state.accessToken == '',
     authStatus: state => state.status
   },
   mutations: {
