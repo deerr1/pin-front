@@ -1,12 +1,13 @@
 <template>
   <div class="window">
     <div class="q-pa-md" style="max-width: 400px" id="window_reg">
+    
       <q-form class="q-gutter-md">
         <h4>Авторизация</h4>
 
         <q-input
           bg-color="white"
-          filled
+          rounded outlined
           v-model="username"
           label="Логин*"
           lazy-rules
@@ -17,7 +18,7 @@
         />
         <q-input
           bg-color="white"
-          filled
+          rounded outlined
           v-model="pass"
           label="Пароль"
           lazy-rules
@@ -29,6 +30,8 @@
 
         <div class="btn">
           <q-btn @click="login()" label="Войти" type="submit" color="orange" />
+        </div>
+        <div class="btn">
           <q-btn
            @click="this.$router.push('Registration')"
             label="Нет аккаунта? Зарегестрироваться"
@@ -75,20 +78,23 @@ export default {
   justify-content: center;
   align-items: center;
   height: 960px;
+  background-image: url('../img/1.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%
 }
 
 .q-pa-md {
   width: 531px;
   height: 706px;
-  border: solid 2px black;
   border-radius: 30px;
   filter: drop-shadow(15px 15px 10px rgba(0, 0, 0, 0.4));
-  background-color: #242424;
+  background-color: #1c1c1c;
 }
 .q-gutter-md {
   margin-top: 0px !important;
   margin-left: -16px !important;
   height: 706px;
+  padding: 16px;
 }
 
 h4 {
@@ -96,7 +102,6 @@ h4 {
   justify-content: center;
   align-items: center;
   color: white;
-  padding: 16px;
   margin: 145px 145px 0 145px !important;
 }
 

@@ -6,7 +6,7 @@
 
         <q-input
           bg-color="white"
-          filled
+          rounded outlined
           v-model="login"
           label="Логин*"
           lazy-rules
@@ -18,7 +18,7 @@
 
         <q-input
           bg-color="white"
-          filled
+          rounded outlined
           v-model="contact_data"
           label="Почта*"
           lazy-rules
@@ -30,7 +30,7 @@
 
         <q-input
           bg-color="white"
-          filled
+          rounded outlined
           v-model="pass"
           label="Пароль"
           lazy-rules
@@ -42,7 +42,7 @@
 
         <q-input
           bg-color="white"
-          filled
+          rounded outlined
           v-model="repitpass"
           label="Повтарите пароль"
           lazy-rules
@@ -53,6 +53,8 @@
         />
         <div class="btn">
           <q-btn @click="registr()" label="Регистрация" type="submit" color="orange" />
+        </div>
+        <div class="btn">
           <q-btn
             @click="this.$router.push('Login')"
             label="Есть аккаунт? Войти"
@@ -108,11 +110,9 @@ export default {
 
 .q-pa-md {
   width: 531px;
-  height: 706px;
-  border: solid 2px black;
+  height: 716px;
   border-radius: 30px;
   filter: drop-shadow(15px 15px 10px rgba(0, 0, 0, 0.4));
-  background-color: #242424;
 }
 .q-gutter-md {
   margin-top: 0px !important;
@@ -133,7 +133,5 @@ h4 {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: 16px;
-  padding: 16px;
 }
 </style>
