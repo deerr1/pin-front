@@ -17,7 +17,7 @@ const state = reactive<State>({
 export default createStore({
   state: state,
   getters:{
-    isLoggedIn: state => state.accessToken == '',
+    isLoggedIn: state => state.accessToken !== '',
     authStatus: state => state.status
   },
   mutations: {

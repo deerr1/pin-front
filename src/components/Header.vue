@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class="bg-black text-white" :shrink="true">
       <q-toolbar-title class="row spase-around" id="title">
-        <img v-if="isLogedIn.value" src="../img/logo.png" id="logo" />
+        <img v-if="isLogedIn" src="../img/logo.png" id="logo" />
         <q-btn
           rounded
           outlined
@@ -29,7 +29,7 @@
           </template>
         </q-input>
       </div>
-      <div v-if="isLogedIn.value">
+      <div v-if="isLogedIn">
         <q-btn
           class="text-orange"
           color="black"
