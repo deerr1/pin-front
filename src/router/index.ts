@@ -3,6 +3,9 @@ import Login from "../views/Login.vue";
 import Registration from "../views/Registration.vue";
 import Complit from "../views/Complit.vue";
 import Chat from "../views/Chat.vue";
+import Profile from "../views/Profile.vue";
+import Settings from "../views/Settings.vue";
+import Border from "../views/Border.vue";
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
@@ -25,6 +28,21 @@ const routes: Array<RouteRecordRaw> = [
     path: "/chat",
     name: "Chat",
     component: Chat,
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
+  },
+  {
+    path: "/border",
+    name: "Border",
+    component: Border,
   },
 ];
 

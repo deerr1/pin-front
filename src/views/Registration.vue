@@ -6,50 +6,42 @@
 
         <q-input
           bg-color="white"
-          rounded outlined
+          rounded
+          outlined
           v-model="login"
           label="Логин*"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
         />
 
         <q-input
           bg-color="white"
-          rounded outlined
+          rounded
+          outlined
           v-model="contact_data"
           label="Почта*"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
         />
 
         <q-input
           bg-color="white"
-          rounded outlined
+          rounded
+          outlined
           v-model="pass"
           label="Пароль"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
         />
 
         <q-input
           bg-color="white"
-          rounded outlined
+          rounded
+          outlined
           v-model="repitpass"
           label="Повтарите пароль"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
         />
         <div class="btn">
           <q-btn @click="registr()" label="Регистрация" type="submit" color="orange" />
@@ -71,53 +63,62 @@
 <script lang="ts">
 import { useQuasar } from "quasar";
 import { ref } from "vue";
-import store from '@/store';
-import router from '@/router';
+import store from "@/store";
+import router from "@/router";
 
 export default {
   setup() {
-    const login = ref<string|null>(null);
-    const contact_data = ref<string|null>(null);
-    const pass = ref<string|null>(null);
-    const repitpass = ref<string|null>(null);
+    const login = ref<string | null>(null);
+    const contact_data = ref<string | null>(null);
+    const pass = ref<string | null>(null);
+    const repitpass = ref<string | null>(null);
 
-    function registr(){
-          let data = {"email": contact_data.value, "username": login.value, "password": pass.value}
-          store.dispatch("registration", data)
-          .then(()=> router.push('/login'))
-          .catch(err=> console.log(err))
-
+    function registr() {
+      let data = {
+        email: contact_data.value,
+        username: login.value,
+        password: pass.value,
       };
+      store
+        .dispatch("registration", data)
+        .then(() => router.push("/login"))
+        .catch((err) => console.log(err));
+    }
 
     return {
       login,
       contact_data,
       pass,
       repitpass,
-      registr
+      registr,
     };
-  }
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .window {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 960px;
+  background-image: url("../img/1.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .q-pa-md {
   width: 531px;
-  height: 716px;
+  height: 706px;
   border-radius: 30px;
   filter: drop-shadow(15px 15px 10px rgba(0, 0, 0, 0.4));
+  background-color: #1c1c1c;
 }
 .q-gutter-md {
   margin-top: 0px !important;
   margin-left: -16px !important;
   height: 706px;
+  padding: 16px;
 }
 
 h4 {
@@ -125,7 +126,7 @@ h4 {
   justify-content: center;
   align-items: center;
   color: white;
-  margin: 45px !important;
+  margin: 60px 145px 0 145px !important;
 }
 
 .btn {
@@ -133,5 +134,7 @@ h4 {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin: 16px;
+  padding: 16px;
 }
 </style>

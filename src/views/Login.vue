@@ -1,31 +1,26 @@
 <template>
   <div class="window">
     <div class="q-pa-md" style="max-width: 400px" id="window_reg">
-    
       <q-form class="q-gutter-md">
         <h4>Авторизация</h4>
 
         <q-input
           bg-color="white"
-          rounded outlined
+          rounded
+          outlined
           v-model="username"
           label="Логин*"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
         />
         <q-input
           bg-color="white"
-          rounded outlined
+          rounded
+          outlined
           v-model="pass"
           label="Пароль"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
         />
 
         <div class="btn">
@@ -33,7 +28,7 @@
         </div>
         <div class="btn">
           <q-btn
-           @click="this.$router.push('Registration')"
+            @click="this.$router.push('Registration')"
             label="Нет аккаунта? Зарегестрироваться"
             color="white"
             flat
@@ -47,40 +42,39 @@
 
 <script lang="ts">
 import { ref } from "vue";
-import store from '@/store';
-import router from '@/router';
-
+import store from "@/store";
+import router from "@/router";
 
 export default {
   setup() {
-    const username = ref<string|null>(null);
-    const pass = ref<string|null>(null);
+    const username = ref<string | null>(null);
+    const pass = ref<string | null>(null);
 
-    function login(){
-          let data = {"username": username.value, "password": pass.value}
-          store.dispatch('login', data)
-          .then(() => router.push("/"))
-          .catch(err => console.log(err));
-
-      };
+    function login() {
+      let data = { username: username.value, password: pass.value };
+      store
+        .dispatch("login", data)
+        .then(() => router.push("/"))
+        .catch((err) => console.log(err));
+    }
     return {
       username,
       pass,
-      login
+      login,
     };
-  }
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .window {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 960px;
-  background-image: url('../img/1.jpg');
+  background-image: url("../img/1.jpg");
   background-repeat: no-repeat;
-  background-size: 100% 100%
+  background-size: 100% 100%;
 }
 
 .q-pa-md {

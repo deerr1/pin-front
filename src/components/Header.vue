@@ -2,7 +2,7 @@
   <div>
     <q-toolbar class="bg-black text-white" :shrink="true">
       <q-toolbar-title class="row spase-around" id="title">
-        <img v-if="isLogedIn" src="../img/logo.png" id="logo" />
+        <img src="../img/logo.png" id="logo" />
         <q-btn
           rounded
           outlined
@@ -93,7 +93,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #title {
   width: 300px;
   margin: 7px;

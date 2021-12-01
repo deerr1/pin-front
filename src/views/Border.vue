@@ -1,5 +1,18 @@
 <template>
   <Header />
+  <q-title class="border_title">
+ <h4 >{{ border_name }}</h4>
+    <q-btn 
+    flat
+    dense
+       size="20px"
+       color="orange"
+      icon="settings"
+      id="btn-set"
+      @click="this.$router.push('#')"
+    />
+  </q-title>
+  <q-separator />
   <div class="container row">
     <div class="column">
       <div class="element-item">
@@ -174,19 +187,9 @@ import router from "@/router";
 import { useStore } from "vuex";
 import Header from "../components/Header.vue";
 export default {
-  setup() {
-    const store = useStore();
-    const isLogedIn = ref<boolean>(store.getters.isLoggedIn);
-    function login() {
-      router.push("/login");
-    }
-    function logout() {
-      store.dispatch("logout").then(() => router.push("/login"));
-    }
+  data() {
     return {
-      isLogedIn,
-      login,
-      logout,
+      border_name: "Название доски",
     };
   },
   components: {
@@ -215,5 +218,12 @@ export default {
 .my-card:hover {
   background: #1c1c1c;
   cursor: pointer;
+}
+.border_title {
+  display: flex;
+  justify-content: center;
+}
+#btn-set{
+  margin: 20px
 }
 </style>
