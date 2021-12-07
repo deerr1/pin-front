@@ -96,12 +96,12 @@
               </q-btn-dropdown>
             </div>
             <div class="folders">
-              <q-card class="folder" @click="this.$router.push('Border')">
+              <q-card class="folder" @click="this.$router.push('Board')">
                 <q-img src="https://cdn.quasar.dev/img/parallax1.jpg">
                   <div class="absolute-bottom text-subtitle1 text-center">Saved pins</div>
                 </q-img>
               </q-card>
-              <q-card class="folder" @click="this.$router.push('Border')">
+              <q-card class="folder" @click="this.$router.push('Board')">
                 <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
                   <div class="absolute-bottom text-subtitle2 text-center">
                     Новая папка

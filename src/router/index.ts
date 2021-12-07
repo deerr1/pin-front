@@ -5,7 +5,7 @@ import Complit from "../views/Complit.vue";
 import Chat from "../views/Chat.vue";
 import Profile from "../views/Profile.vue";
 import Settings from "../views/Settings.vue";
-import Border from "../views/Border.vue";
+import Board from "../components/Board.vue";
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
@@ -40,9 +40,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Settings,
   },
   {
-    path: "/border",
-    name: "Border",
-    component: Border,
+    path: "/board",
+    name: "Board",
+    component: Board,
   },
 ];
 
