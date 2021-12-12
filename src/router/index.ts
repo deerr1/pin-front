@@ -6,6 +6,7 @@ import Chat from "../views/Chat.vue";
 import Profile from "../views/Profile.vue";
 import Settings from "../views/Settings.vue";
 import Board from "../components/Board.vue";
+import Pin from "../views/Pin.vue"
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
@@ -43,6 +44,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/board",
     name: "Board",
     component: Board,
+  },
+  {
+    path: "/pin/:id",
+    name: "Pin",
+    props: true,
+    component: Pin,
   },
 ];
 

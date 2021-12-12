@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div >
     <q-toolbar class="bg-black text-white" :shrink="true">
       <q-toolbar-title class="row spase-around" id="title">
-        <img src="../img/logo.png" id="logo" />
         <q-btn
           rounded
           outlined
@@ -29,7 +28,7 @@
           </template>
         </q-input>
       </div>
-      <div v-if="isLogedIn">
+      <div v-if="store.getters.isLoggedIn" >
         <q-btn
           class="text-orange"
           color="black"
@@ -71,23 +70,23 @@
 </template>
 
 <script lang="ts">
-import { ref } from "@vue/reactivity";
+import { computed, ref } from "@vue/reactivity";
 import router from "@/router";
 import { useStore } from "vuex";
 export default {
   setup() {
     const store = useStore();
-    const isLogedIn = ref<boolean>(store.getters.isLoggedIn);
     function login() {
       router.push("/login");
     }
     function logout() {
       store.dispatch("logout").then(() => router.push("/login"));
     }
+    
     return {
-      isLogedIn,
       login,
       logout,
+      store
     };
   },
 };

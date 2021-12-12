@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <!-- Тут работа над аватаром и кнопкой настроек -->
   <div class="avatar">
     <q-avatar style="width: 200px; height: 200px">
@@ -144,9 +143,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
 import { ref } from "vue";
-import Header from "../components/Header.vue";
 
 export default defineComponent({
   data() {
@@ -161,7 +158,7 @@ export default defineComponent({
     };
   },
   components: {
-    Header,
+
   },
 });
 </script>

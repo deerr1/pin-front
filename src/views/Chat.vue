@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <div class="main-container absolute-center row">
     <div class="dialogs-container">
       <q-btn rounded outlined
@@ -49,7 +48,6 @@
 </template>
 
 <script lang="ts">
-import Header from "../components/Header.vue";
 export default {
   data() {
     return {
@@ -57,7 +55,6 @@ export default {
     };
   },
   components: {
-    Header,
   },
 };
 </script>

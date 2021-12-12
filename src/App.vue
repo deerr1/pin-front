@@ -1,15 +1,19 @@
 <template>
+  <Header />
   <div>
-    <!-- dfdsffds -->
-    <router-view />
+    <router-view :key="$route.path"/>
   </div>
 </template>
 
 <script lang="ts">
+import Header from "./components/Header.vue";
+
 export default {
-  name: "LayoutDefault",
   setup() {
     return {};
+  },
+  components:{
+    Header,
   },
 };
 </script>

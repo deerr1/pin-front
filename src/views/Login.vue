@@ -11,17 +11,32 @@
           v-model="username"
           label="Логин*"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Введите логин',
+          ]"
         />
         <q-input
           bg-color="white"
           rounded
           outlined
+          :type="isPwd ? 'password' : 'text'"
           v-model="pass"
           label="Пароль"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь']"
-        />
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Введите пароль',
+          ]"
+        >
+        <template v-slot:append>
+          <q-icon
+            :name="isPwd ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @click="isPwd = !isPwd"
+          />
+        </template>
+        </q-input>
 
         <div class="btn">
           <q-btn @click="login()" label="Войти" type="submit" color="orange" />
@@ -49,6 +64,7 @@ export default {
   setup() {
     const username = ref<string | null>(null);
     const pass = ref<string | null>(null);
+    const isPwd = ref<boolean>(true);
 
     function login() {
       let data = { username: username.value, password: pass.value };
@@ -61,6 +77,7 @@ export default {
       username,
       pass,
       login,
+      isPwd,
     };
   },
 };

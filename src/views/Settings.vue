@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <div class="app">
     <q-avatar style="width: 120px; height: 120px; margin: 25px 25px 25px 90px">
       <img
@@ -30,10 +29,8 @@
 </template>
 
 <script lang="ts">
-import Header from "../components/Header.vue";
 export default {
   components: {
-    Header,
   },
 };
 </script>

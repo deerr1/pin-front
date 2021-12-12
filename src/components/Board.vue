@@ -15,7 +15,7 @@
   <q-separator />
   <div class="main">
     <div class="container">
-      <q-card class="my-card" v-for="card in cards">
+      <q-card class="my-card" v-for="(card, index) in cards" :key="index">
         <figure>
           <!-- <q-img :src="card.img" alt="A windmill" class="card-img"/> -->
           <div class="card-body">
