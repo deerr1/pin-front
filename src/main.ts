@@ -13,7 +13,7 @@ createApp(App)
   .use(router)
   .mount("#app");
 
-axios.defaults.baseURL = "http://localhost:8000/api/";
+axios.defaults.baseURL = "http://localhost:8081/api/";
 const token = localStorage.getItem('access_token')
 if (token){
   axios.defaults.headers.common['Authorization'] = "Bearer " + token
