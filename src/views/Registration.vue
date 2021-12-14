@@ -26,12 +26,12 @@
           :rules="[
             (val) => (val && val.length > 0) || 'Введите почту',
             (val) => {
-                const re = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-                if (!re.test(val)){
-                  return 'Вы неправильно ввели почту'
-                }
-                return true
+              const re = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+              if (!re.test(val)) {
+                return 'Вы неправильно ввели почту';
               }
+              return true;
+            },
           ]"
         />
 
@@ -87,7 +87,6 @@ import { ref } from "vue";
 import store from "@/store";
 import router from "@/router";
 
-
 export default {
   setup() {
     const login = ref<string | null>(null);
@@ -95,35 +94,36 @@ export default {
     const pass = ref<string | null>(null);
     const repitpass = ref<string | null>(null);
 
-    const login_ref = ref()
-    const email_ref = ref()
-    const pass_ref = ref()
-    const repitpass_ref = ref()
+    const login_ref = ref();
+    const email_ref = ref();
+    const pass_ref = ref();
+    const repitpass_ref = ref();
 
     function registr() {
-      login_ref.value.validate()
-      email_ref.value.validate()
-      pass_ref.value.validate()
-      repitpass_ref.value.validate()
-    
-      if (
-        login_ref.value.hasError
-        || email_ref.value.hasError
-        || pass_ref.value.hasError
-        || repitpass_ref.value.hasError
+      login_ref.value.validate();
+      email_ref.value.validate();
+      pass_ref.value.validate();
+      repitpass_ref.value.validate();
 
-      ){
-        return
+      if (
+        login_ref.value.hasError ||
+        email_ref.value.hasError ||
+        pass_ref.value.hasError ||
+        repitpass_ref.value.hasError
+      ) {
+        return;
+      } else {
+        let data = {
+          email: contact_data.value,
+          username: login.value,
+          password: pass.value,
+        };
+        
+        store
+          .dispatch("registration", data)
+          .then(() => router.push("/login"))
+          .catch((err) => console.log(err));
       }
-      let data = {
-        email: contact_data.value,
-        username: login.value,
-        password: pass.value,
-      };
-      store
-        .dispatch("registration", data)
-        .then(() => router.push("/login"))
-        .catch((err) => console.log(err));
     }
 
     return {
@@ -135,7 +135,7 @@ export default {
       login_ref,
       email_ref,
       pass_ref,
-      repitpass_ref
+      repitpass_ref,
     };
   },
 };

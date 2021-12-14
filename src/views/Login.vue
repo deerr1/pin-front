@@ -3,7 +3,7 @@
     <div class="q-pa-md" style="max-width: 400px" id="window_reg">
       <q-form class="q-gutter-md">
         <h4>Авторизация</h4>
-        <div v-if="store.getters.authStatus=='error'" class="q-mx-xl text-red">
+        <div v-if="error" class="q-mx-xl text-red">
           Неверный логин или пароль
         </div>
         <q-input
@@ -62,7 +62,9 @@ export default {
     const username = ref<string | null>(null);
     const pass = ref<string | null>(null);
     const isPwd = ref<boolean>(true);
+    const error = ref<boolean>(false);
     const store = useStore();
+    ;
 
     function login() {
       let data = { username: username.value, password: pass.value };
@@ -70,6 +72,7 @@ export default {
         store
           .dispatch("login", data)
           .then(() => router.push("/"))
+          .catch(()=>{error.value = true});
       }
     }
     return {
@@ -77,7 +80,7 @@ export default {
       pass,
       login,
       isPwd,
-      store,
+      error,
     };
   },
 };
