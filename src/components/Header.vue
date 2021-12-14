@@ -30,12 +30,14 @@
       </div>
       <div v-if="store.getters.isLoggedIn" >
         <q-btn
+          v-if="false"
           class="text-orange"
           color="black"
           icon="forum"
           @click="this.$router.push('Chat')"
         />
         <q-btn
+          v-if="false"
           class="text-orange"
           color="black"
           icon="notifications"
@@ -43,9 +45,9 @@
         />
         <q-btn-dropdown class="text-orange" color="black" icon="person">
           <q-list>
-            <q-item clickable v-close-popup @click="onItemClick">
+            <q-item clickable v-close-popup @click="this.$router.push('Profile')">
               <q-item-section>
-                <q-item-label>что-то тут будет</q-item-label>
+                <q-item-label >Профиль</q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable v-close-popup @click="logout()">

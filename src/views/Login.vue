@@ -3,7 +3,9 @@
     <div class="q-pa-md" style="max-width: 400px" id="window_reg">
       <q-form class="q-gutter-md">
         <h4>Авторизация</h4>
-
+        <div v-if="store.getters.authStatus=='error'" class="q-mx-xl text-red">
+          Неверный логин или пароль
+        </div>
         <q-input
           bg-color="white"
           rounded
@@ -11,10 +13,7 @@
           v-model="username"
           label="Логин*"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Введите логин',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Введите логин']"
         />
         <q-input
           bg-color="white"
@@ -24,18 +23,15 @@
           v-model="pass"
           label="Пароль"
           lazy-rules
-          :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Введите пароль',
-          ]"
+          :rules="[(val) => (val && val.length > 0) || 'Введите пароль']"
         >
-        <template v-slot:append>
-          <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
-        </template>
+          <template v-slot:append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+            />
+          </template>
         </q-input>
 
         <div class="btn">
@@ -59,25 +55,29 @@
 import { ref } from "vue";
 import store from "@/store";
 import router from "@/router";
+import { useStore } from 'vuex';
 
 export default {
   setup() {
     const username = ref<string | null>(null);
     const pass = ref<string | null>(null);
     const isPwd = ref<boolean>(true);
+    const store = useStore();
 
     function login() {
       let data = { username: username.value, password: pass.value };
-      store
-        .dispatch("login", data)
-        .then(() => router.push("/"))
-        .catch((err) => console.log(err));
+      if(username.value!=null && pass.value!=null){
+        store
+          .dispatch("login", data)
+          .then(() => router.push("/"))
+      }
     }
     return {
       username,
       pass,
       login,
       isPwd,
+      store,
     };
   },
 };

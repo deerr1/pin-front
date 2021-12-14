@@ -1,11 +1,10 @@
 <template>
   <!-- Тут работа над аватаром и кнопкой настроек -->
   <div class="avatar">
-    <q-avatar style="width: 200px; height: 200px">
+    <q-avatar class="" size="200px" font-size="px">
       <img
-        src="https://www.factroom.ru/wp-content/uploads/2019/06/10-faktov-o-evgenii-ponasenkove-kotoryj-svodit-vsekh-s-uma-1250x883.jpg"
+        :src="user?.avatar ? user.avatar : require('../img/noImage.svg.png')"
       />
-
       <!-- name там имя иконки надо писать -->
       <q-btn
         flat
@@ -23,29 +22,27 @@
   <!-- Тут работа над аватаром и кнопкой настроек -->
 
   <!-- Тут блок с почтой, именим, подпиской и соц сетями. -->
-  <div class="NameProfile">
-    <h4>{{ NameProfile }}</h4>
+  <div class="NameProfile text-h4">
+    {{ user?.username }}
   </div>
   <div class="info" style="max-width: 100%">
     <div class="mail">
-      <div color="black" flat class="q-ml-sm">
-        {{ mail }}
-      </div>
+      {{ user?.email }}
     </div>
 
-    <div class="Profilinf">
+    <!-- <div class="Profilinf">
       <div class="AnotherUsers">
         <div class="Subscribers">{{ Subscribers }} подпичиков</div>
         <div class="Subscriptions">{{ Subscriptions }} подписок</div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="q-pa-md">
+    <!-- <div class="q-pa-md">
       <div class="Links">
         <a :href="vk"><img src="../img/vk.png" /></a>
         <a :href="fb"><img src="../img/fb.png" /></a>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <!-- Тут блок с разделами -->
@@ -63,7 +60,6 @@
         >
           <q-tab name="borders" label="Мои доски" />
           <q-tab name="saved" label="Сохраненные доски" />
-          <q-tab name="subscribed" label="Мои подписки" />
         </q-tabs>
 
         <q-separator />
@@ -72,69 +68,25 @@
           <q-tab-panel name="borders">
             <div class="Button">
               <q-btn round color="orange" icon="add"></q-btn>
-
-              <q-btn-dropdown
-                round
-                color="orange"
-                dropdown-icon="sorted"
-                label="Сортировать"
-              >
-                <q-list>
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>В алфавитном порядке</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>Последнее сохраненая</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-btn-dropdown>
             </div>
             <div class="folders">
-              <q-card class="folder" @click="this.$router.push('Board')">
+              <q-card
+                class="folder"
+                v-for="board in boards"
+                :key="board.board.id"
+              >
                 <q-img src="https://cdn.quasar.dev/img/parallax1.jpg">
-                  <div class="absolute-bottom text-subtitle1 text-center">Saved pins</div>
-                </q-img>
-              </q-card>
-              <q-card class="folder" @click="this.$router.push('Board')">
-                <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-                  <div class="absolute-bottom text-subtitle2 text-center">
-                    Новая папка
+                  <div class="absolute-bottom text-subtitle1 text-center">
+                    {{ board.board.name }}
+                    <q-icon v-if="board.board.access == 2" name="lock" />
+                    <q-icon v-else name="lock_open" />
                   </div>
                 </q-img>
               </q-card>
             </div>
           </q-tab-panel>
 
-          <q-tab-panel name="saved">
-            <q-btn-dropdown
-              class="bottom-right q-ma-md"
-              label="Сортировать"
-              round
-              color="orange"
-              dropdown-icon="sorted"
-            >
-              <q-list>
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>В алфавитном порядке</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Последнее сохраненая</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-          </q-tab-panel>
-
-          <q-tab-panel name="subscribed"> </q-tab-panel>
+          <q-tab-panel name="saved"> </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </div>
@@ -142,24 +94,63 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import axios from "axios";
+import { defineComponent, onMounted } from "vue";
 import { ref } from "vue";
 
+interface User {
+  id: number | null;
+  username: string | null;
+  email: string | null;
+  avatar: string | null;
+}
+
+interface Board {
+  id: number | null;
+  name: string | null;
+  access: number | null;
+}
+
+interface UserBoard {
+  user: number;
+  board: Board;
+}
+
 export default defineComponent({
-  data() {
+  setup() {
+    const user = ref<User>();
+    const boards = ref<Array<UserBoard>>();
+
+    onMounted(() => {
+      axios.get("/users/user-profile/").then((resp) => {
+        var data = resp.data as Array<User>;
+        user.value = data[0];
+      });
+
+      axios.get("/pins/user-boards/").then((resp) => {
+        var data = resp.data as Array<UserBoard>;
+        boards.value = data;
+      });
+    });
+
     return {
+      user,
       tab: ref("borders"),
-      mail: "mailbox@mail.com",
-      NameProfile: "Евгений Панасенко",
-      Subscribers: "10",
-      Subscriptions: "10",
-      vk: "http://vk.com",
-      fb: "http://facebook.com",
+      boards,
     };
   },
-  components: {
-
-  },
+  // data() {
+  //   return {
+  //     tab: ref("borders"),
+  //     mail: "mailbox@mail.com",
+  //     NameProfile: "Евгений Панасенко",
+  //     Subscribers: "10",
+  //     Subscriptions: "10",
+  //     vk: "http://vk.com",
+  //     fb: "http://facebook.com",
+  //   };
+  // },
+  components: {},
 });
 </script>
 

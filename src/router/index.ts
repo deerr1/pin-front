@@ -19,31 +19,49 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: "Login",
     component: Login,
+    meta:{
+      guest: true
+    }
   },
   {
     path: "/registration",
     name: "Registration",
     component: Registration,
+    meta:{
+      guest: true
+    }
   },
   {
     path: "/chat",
     name: "Chat",
     component: Chat,
+    meta:{
+      requiresAuth: true
+    }
   },
   {
     path: "/profile",
     name: "Profile",
     component: Profile,
+    meta:{
+      requiresAuth: true
+    }
   },
   {
     path: "/settings",
     name: "Settings",
     component: Settings,
+    meta:{
+      requiresAuth: true
+    }
   },
   {
     path: "/board",
     name: "Board",
     component: Board,
+    meta:{
+      requiresAuth: true
+    }
   },
   {
     path: "/pin/:id",
@@ -66,7 +84,13 @@ router.beforeEach((to, from, next) => {
     }
     next('/login')
   }
-  else
+  else if(to.matched.some(record => record.meta.guest)) {
+    if(store.getters.isLoggedIn){
+      next('/')
+      return
+    }
+    next()
+  }
   next()
 })
 

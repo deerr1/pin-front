@@ -3,14 +3,11 @@
     <div class="container">
       <q-card class="my-card" v-for="card in cards" :key="card.id" >
         <figure >
-          <!-- <q-img :src="card.img" alt="A windmill" class="card-img"/> -->
           <div class="card-body" @click="this.$router.push({name: 'Pin', params: {id: card.id}})">
             <q-img :src="card.image" class="card-img" />
           </div>
-          <q-card-actions align="right">
-            <q-btn flat round color="red" icon="favorite" />
-            <q-btn flat round color="teal" icon="bookmark" />
-            <q-btn flat round color="primary" icon="share" />
+          <q-card-actions align="left">
+            <div class="text-h5">{{card.name}}</div>
           </q-card-actions>
         </figure>
       </q-card>
@@ -24,6 +21,7 @@ import { useStore } from "vuex";
 import { onMounted } from '@vue/runtime-core';
 interface Card {
   id: number,
+  name: string,
   image: string
 }
 
@@ -48,7 +46,6 @@ export default {
     };
   },
   components: {
-    
   }
 };
 </script>
@@ -59,12 +56,11 @@ export default {
   justify-content: center;
 }
 .my-card {
-  width: 340px;
+  width: 17vw;
 }
 .my-card:hover {
-  background: #1c1c1c;
   cursor: pointer;
-  width: 350px;
+  width: 18vw;
   transition: 0.3s;
 }
 .border_title {

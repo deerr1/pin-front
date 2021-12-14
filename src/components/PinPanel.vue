@@ -11,32 +11,37 @@
       />
       <q-btn flat round color="black" icon="link" @click="copy()" size="15px" />
     </div>
-    <div class="row justify-between col-8 self-center">
+    <div
+      class="row justify-between col-9 self-center"
+      v-if="store.getters.isLoggedIn"
+    >
       <q-select
-        class="col-5"
+        class="col-6"
         v-model="model"
-        :options="options"
+        :options="boards"
         label="Доска"
         outlined
-        @input="
-          (val) => {
-            return val.name;
-          }
-        "
       >
+        <template #selected>
+          <div>{{ model?.name }}</div>
+          <q-item-section v-if="model?.name != null" side>
+            <q-icon v-if="model?.access == 2" name="lock" />
+            <q-icon v-else name="lock_open" />
+          </q-item-section>
+        </template>
         <template v-slot:option="{ itemProps, opt, toggleOption }">
-          <q-item v-bind="itemProps" clickable @click="toggleOption(opt.name)">
+          <q-item v-bind="itemProps" clickable @click="toggleOption(opt.board)">
             <q-item-section>
-              <q-item-label >{{opt.name}}</q-item-label>
+              <q-item-label>{{ opt.board.name }}</q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-icon v-if="opt.close" name="lock" />
+              <q-icon v-if="opt.board.access == 2" name="lock" />
               <q-icon v-else name="lock_open" />
             </q-item-section>
           </q-item>
         </template>
         <template v-slot:after-options>
-          <q-btn icon="add"  class="full-width" label="Добавить доску" />
+          <q-btn icon="add" class="full-width" label="Добавить доску" />
         </template>
       </q-select>
       <q-btn
@@ -45,7 +50,7 @@
         unelevated
         rounded
         label="Сохранить"
-        @click="onClick"
+        @click="SaveBoard()"
       />
     </div>
   </div>
@@ -53,14 +58,21 @@
 
 <script lang="ts">
 import { exportFile } from "quasar";
-import { uid } from "quasar";
+import { uid, useQuasar } from "quasar";
 import { copyToClipboard } from "quasar";
-import { defineComponent, PropType, ref } from "@vue/runtime-core";
+import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
 import axios from "axios";
+import { useStore } from "vuex";
 
 interface Board {
-  name: string;
-  close: boolean;
+  id: number | null;
+  name: string | null;
+  access: number | null;
+}
+
+interface UserBoard {
+  user: number;
+  board: Board;
 }
 
 export default defineComponent({
@@ -73,13 +85,17 @@ export default defineComponent({
       required: true,
       type: Object as PropType<string>,
     },
+    id: {
+      required: true,
+      type: Object as PropType<number>,
+    },
   },
   setup(props) {
-    const options = ref<Array<Board>>([
-      { name: "Open", close: false } as Board,
-      { name: "close", close: true } as Board,
-    ]);
-    const model = ref<string|null>(null);
+    const store = useStore();
+    const model = ref<Board | null>(null);
+    const $q = useQuasar();
+
+    const boards = ref<Array<UserBoard>>();
 
     function download() {
       axios
@@ -94,15 +110,49 @@ export default defineComponent({
 
     function copy() {
       copyToClipboard(props.link).then(() => {
-        alert("Ссылка скопирвоана");
+        $q.notify({
+          position: "top",
+          color: "positive",
+          icon: "done",
+          message: "Ссылка скопирована",
+          timeout: 50,
+        });
       });
     }
+
+    function SaveBoard() {
+        console.log({ "pin": props.id, "board": model.value?.id })
+      if (model.value != null) {
+        axios
+          .post("/pins/user-board-pin/", { "pin": props.id, "board": model.value?.id })
+          .then(() => {
+            $q.notify({
+              position: "top",
+              color: "positive",
+              icon: "add",
+              message: "Изображение добавлено на доску",
+              timeout: 80,
+            });
+          });
+      }
+    }
+
+    onMounted(() => {
+      if (store.getters.isLoggedIn) {
+        axios.get("/pins/user-boards/").then((resp) => {
+          var data = resp.data as Array<UserBoard>;
+          boards.value = data;
+        });
+      }
+    });
 
     return {
       download,
       copy,
+      SaveBoard,
       model,
-      options,
+      store,
+      boards,
     };
   },
 });

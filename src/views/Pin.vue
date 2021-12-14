@@ -1,12 +1,16 @@
 <template>
   <div class="row justify-center q-mt-lg items-stretch">
-    <div class="column relative-position absilute-center shadow-3 col-7">
+    <div v-if="error" class="absilute-center text-h3">
+      Нету Pin с данным id
+    </div>
+    <div v-else class="column relative-position absilute-center shadow-3 col-7">
       <div class="row justify-between" style="width: 100%">
         <q-img :src="pin?.image" class="card-img col-6" style="" />
         <div class="row col-6">
           <PinPanel
             :file="pin?.image"
             :link="path"
+            :id="pin?.id"
             class="col-12 q-mx-sm"
           ></PinPanel>
           <div class="column q-mx-sm col-12">
@@ -65,18 +69,22 @@ export default defineComponent({
   setup(props) {
     const pin = ref<Pin>();
     const path = ref<Location>(window.location);
-    const avatar = ref<string>("../img/logo.png")
+    const error = ref<boolean>(false)
 
     onMounted(() => {
       axios.get("/pins/pin-detail/" + props.id).then((resp) => {
         var data = resp.data as Array<Pin>;
         pin.value = data[0];
+      })
+      .catch((e)=>{
+        error.value = true
       });
     });
 
     return {
       pin,
       path,
+      error,
     };
   },
   components: {
