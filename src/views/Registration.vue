@@ -3,7 +3,9 @@
     <div class="q-pa-md" style="max-width: 400px" id="window_reg">
       <form @submit.prevent.stop="registr" class="q-gutter-md">
         <h4>Регистрация</h4>
-
+        <div v-if="error" class="q-mx-xl text-red">
+          Пользователь с такими данными уже существует
+        </div>
         <q-input
           bg-color="white"
           ref="login_ref"
@@ -43,7 +45,10 @@
           v-model="pass"
           label="Пароль"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Введите пароль']"
+          :rules="[
+            (val) => (val && val.length > 0) || 'Введите пароль',
+            (val) => val.length > 8 || 'Пароль слишком короткий',
+          ]"
         />
 
         <q-input
@@ -60,12 +65,7 @@
           ]"
         />
         <div class="btn">
-          <q-btn
-            @click="registr()"
-            label="Регистрация"
-            type="submit"
-            color="orange"
-          />
+          <q-btn label="Регистрация" type="submit" color="orange" />
         </div>
         <div class="btn">
           <q-btn
@@ -98,6 +98,7 @@ export default {
     const email_ref = ref();
     const pass_ref = ref();
     const repitpass_ref = ref();
+    const error = ref(false)
 
     function registr() {
       login_ref.value.validate();
@@ -118,11 +119,13 @@ export default {
           username: login.value,
           password: pass.value,
         };
-        
+
         store
           .dispatch("registration", data)
           .then(() => router.push("/login"))
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            error.value = true;
+          });
       }
     }
 
@@ -136,6 +139,7 @@ export default {
       email_ref,
       pass_ref,
       repitpass_ref,
+      error,
     };
   },
 };
