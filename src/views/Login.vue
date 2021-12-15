@@ -1,7 +1,7 @@
 <template>
   <div class="window">
     <div class="q-pa-md" style="max-width: 400px" id="window_reg">
-      <q-form class="q-gutter-md">
+      <q-form class="q-gutter-md" @submit.prevent="login">
         <h4>Авторизация</h4>
         <div v-if="error" class="q-mx-xl text-red">
           Неверный логин или пароль
@@ -35,7 +35,7 @@
         </q-input>
 
         <div class="btn">
-          <q-btn @click="login()" label="Войти" type="submit" color="orange" />
+          <q-btn  label="Войти" type="submit" color="orange" />
         </div>
         <div class="btn">
           <q-btn
