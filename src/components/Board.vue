@@ -1,7 +1,7 @@
 <template>
   <Header />
   <q-title class="border_title">
-    <h4>{{ border_name }}</h4>
+    <h4>{{ board?.name }}</h4>
     <q-btn
       flat
       dense
@@ -13,18 +13,16 @@
     />
   </q-title>
   <q-separator />
-  <div class="main">
+ <div class="main">
     <div class="container">
-      <q-card class="my-card" v-for="(card, index) in cards" :key="index">
-        <figure>
-          <!-- <q-img :src="card.img" alt="A windmill" class="card-img"/> -->
-          <div class="card-body">
-            <q-img :src="card.img" class="card-img" />
+      <div v-if="pins==0" class="text-center text-h3" style="width:80vw">Здесь еще нет картинок</div>
+      <q-card v-else class="my-card" v-for="pin in pins" :key="pin.pin.id" >
+        <figure >
+          <div class="card-body" @click="this.$router.push({name: 'Pin', params: {id: pin.pin.id}})">
+            <q-img :src="pin.pin.image" class="card-img" />
           </div>
-          <q-card-actions align="right">
-            <q-btn flat round color="red" icon="favorite" />
-            <q-btn flat round color="teal" icon="bookmark" />
-            <q-btn flat round color="primary" icon="share" />
+          <q-card-actions align="left">
+            <div class="text-h5">{{pin.pin.name}}</div>
           </q-card-actions>
         </figure>
       </q-card>
@@ -36,126 +34,76 @@ import { ref } from "@vue/reactivity";
 import router from "@/router";
 import { useStore } from "vuex";
 import Header from "../components/Header.vue";
-export default {
-  data() {
+import { defineComponent, onMounted, PropType } from "@vue/runtime-core";
+import axios from "axios";
+
+interface Card {
+  id: number;
+  name: string;
+  image: string;
+}
+
+interface Pin{
+  pin: Card
+}
+interface Board{
+  id: number,
+  name: string,
+  access: string
+}
+
+export default defineComponent({
+  props: {
+    id: {
+      required: true,
+      type: Object as PropType<string>,
+    },
+  },
+
+  setup(props) {
+    const pins = ref<Array<Pin>>();
+    const board = ref<Board>();
+
+    onMounted(() => {
+      axios.get("/pins/user-board-detail/" + props.id)
+      .then((resp)=>{
+        var data = resp.data as Array<Board>
+        board.value = data[0]
+        console.log(data)
+      })
+
+      axios.get("/pins/pins-on-board/" + props.id)
+      .then((resp)=>{
+        var data = resp.data as Array<Pin>
+        pins.value = data
+
+        console.log(data)
+      })
+    });
+
     return {
-      border_name: "Название доски",
-      cards: [
-        {
-          img: "https://img2.fonwall.ru/o/pe/amazing-beautiful-flower-great.jpeg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/originals/d1/83/11/d18311078597aeffbe130b3f46d9d26d.jpg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/736x/97/24/4e/97244edceeb639be45ec4c2ec541d4eb--beautiful-butterflies-beautiful-flowers.jpg",
-        },
-        {
-          img: "https://pbs.twimg.com/media/Es4wO0hXUAA6K0s.jpg",
-        },
-        {
-          img:
-            "http://1.bp.blogspot.com/-VEoqyiw7rt8/VYXdx74_kzI/AAAAAAAEkWc/S_HOPYidFos/s1600/Zbigniew%2BKopania%2BTutt%2527Art%2540-%2B%252860%2529.jpg",
-        },
-        {
-          img:
-            "https://www.nastol.com.ua/download.php?img=201701/1920x1200/nastol.com.ua-201978.jpg",
-        },
-        {
-          img: "https://i.pinimg.com/736x/e2/0c/91/e20c9175e3b4192dc94ceb803009e924.jpg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/originals/2b/d2/cf/2bd2cfbd44e4525b7709f07673df14df.jpg",
-        },
-        {
-          img: "https://img2.fonwall.ru/o/pe/amazing-beautiful-flower-great.jpeg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/originals/d1/83/11/d18311078597aeffbe130b3f46d9d26d.jpg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/736x/97/24/4e/97244edceeb639be45ec4c2ec541d4eb--beautiful-butterflies-beautiful-flowers.jpg",
-        },
-        {
-          img: "https://pbs.twimg.com/media/Es4wO0hXUAA6K0s.jpg",
-        },
-        {
-          img:
-            "http://1.bp.blogspot.com/-VEoqyiw7rt8/VYXdx74_kzI/AAAAAAAEkWc/S_HOPYidFos/s1600/Zbigniew%2BKopania%2BTutt%2527Art%2540-%2B%252860%2529.jpg",
-        },
-        {
-          img:
-            "https://www.nastol.com.ua/download.php?img=201701/1920x1200/nastol.com.ua-201978.jpg",
-        },
-        {
-          img: "https://i.pinimg.com/736x/e2/0c/91/e20c9175e3b4192dc94ceb803009e924.jpg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/originals/2b/d2/cf/2bd2cfbd44e4525b7709f07673df14df.jpg",
-        },
-        {
-          img: "https://pbs.twimg.com/media/Es4wO0hXUAA6K0s.jpg",
-        },
-        {
-          img:
-            "http://1.bp.blogspot.com/-VEoqyiw7rt8/VYXdx74_kzI/AAAAAAAEkWc/S_HOPYidFos/s1600/Zbigniew%2BKopania%2BTutt%2527Art%2540-%2B%252860%2529.jpg",
-        },
-        {
-          img:
-            "https://www.nastol.com.ua/download.php?img=201701/1920x1200/nastol.com.ua-201978.jpg",
-        },
-        {
-          img: "https://i.pinimg.com/736x/e2/0c/91/e20c9175e3b4192dc94ceb803009e924.jpg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/originals/2b/d2/cf/2bd2cfbd44e4525b7709f07673df14df.jpg",
-        },
-        {
-          img: "https://pbs.twimg.com/media/Es4wO0hXUAA6K0s.jpg",
-        },
-        {
-          img:
-            "http://1.bp.blogspot.com/-VEoqyiw7rt8/VYXdx74_kzI/AAAAAAAEkWc/S_HOPYidFos/s1600/Zbigniew%2BKopania%2BTutt%2527Art%2540-%2B%252860%2529.jpg",
-        },
-        {
-          img:
-            "https://www.nastol.com.ua/download.php?img=201701/1920x1200/nastol.com.ua-201978.jpg",
-        },
-        {
-          img: "https://i.pinimg.com/736x/e2/0c/91/e20c9175e3b4192dc94ceb803009e924.jpg",
-        },
-        {
-          img:
-            "https://i.pinimg.com/originals/2b/d2/cf/2bd2cfbd44e4525b7709f07673df14df.jpg",
-        },
-      ],
+      pins,
+      board
     };
   },
   components: {
     Header,
   },
-};
+});
 </script>
 
 <style scoped>
 .main {
   display: flex;
   justify-content: center;
+  min-height: 500px;
 }
 .my-card {
-  width: 340px;
+  width: 17vw;
 }
 .my-card:hover {
-  background: #1c1c1c;
   cursor: pointer;
-  width: 350px;
+  width: 18vw;
   transition: 0.3s;
 }
 .border_title {
@@ -186,4 +134,3 @@ figure > img {
   padding-top: 20px;
 }
 </style>
-

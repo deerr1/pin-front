@@ -19,6 +19,7 @@ import axios from "axios";
 import { ref } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { onMounted } from '@vue/runtime-core';
+
 interface Card {
   id: number,
   name: string,
@@ -35,7 +36,6 @@ export default {
       axios.get('/pins/pins/')
       .then(resp => {
         var data = resp.data as Array<Card>
-        console.log(data)
         cards.value = data
       })
     })

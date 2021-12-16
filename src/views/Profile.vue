@@ -67,7 +67,22 @@
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="borders">
             <div class="Button">
-              <q-btn round color="orange" icon="add"></q-btn>
+              <q-btn-dropdown round color="orange" icon="add">
+                <q-list bordered>
+                  <q-item clickable v-ripple @click="addPin=true">
+                    <div class="text-body1">
+                      <q-icon name="image" color="orange" size="20px"/>
+                      Добавить пин
+                    </div>
+                  </q-item>
+                  <q-item clickable v-ripple @click="addBoard=true">
+                    <div class="text-body1">
+                      <q-icon name="photo_library" color="orange" size="20px"/>
+                      Добавить доску
+                    </div>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
             </div>
             <div class="folders">
               <q-card
@@ -75,7 +90,7 @@
                 v-for="board in boards"
                 :key="board.board.id"
               >
-                <q-img src="https://cdn.quasar.dev/img/parallax1.jpg">
+                <q-img :src="board.board.img" width="100%" height="100%" @click="this.$router.push({name: 'Board', params: {'id': board.board.id}})">
                   <div class="absolute-bottom text-subtitle1 text-center">
                     {{ board.board.name }}
                     <q-icon v-if="board.board.access == 2" name="lock" />
@@ -91,11 +106,15 @@
       </q-card>
     </div>
   </div>
+  <AddBoardMenu :addBoard="addBoard" @closes="closeMenu"></AddBoardMenu>
+  <AddPinMenu :addPin="addPin" @close="closePin"></AddPinMenu>
 </template>
 
 <script lang="ts">
 import axios from "axios";
 import { defineComponent, onMounted } from "vue";
+import AddBoardMenu from "../components/AddBoardMenu.vue"
+import AddPinMenu from "../components/AddPinMenu.vue"
 import { ref } from "vue";
 
 interface User {
@@ -109,48 +128,64 @@ interface Board {
   id: number | null;
   name: string | null;
   access: number | null;
+  img: string | null;
 }
 
 interface UserBoard {
-  user: number;
-  board: Board;
+  user: number ;
+  board: Board ;
 }
 
 export default defineComponent({
   setup() {
     const user = ref<User>();
     const boards = ref<Array<UserBoard>>();
+    const addBoard = ref<boolean>(false)
+    const addPin = ref<boolean>(false)
 
-    onMounted(() => {
-      axios.get("/users/user-profile/").then((resp) => {
-        var data = resp.data as Array<User>;
-        user.value = data[0];
-      });
-
+    function getBoards() {
       axios.get("/pins/user-boards/").then((resp) => {
         var data = resp.data as Array<UserBoard>;
         boards.value = data;
       });
+    }
+
+    function closeMenu(action: boolean) {
+      addBoard.value = false
+      if(action==true){
+        getBoards()
+      }
+    }
+
+    function closePin(action: boolean) {
+      addPin.value = false
+      if(action==true){
+        getBoards()
+      }
+    }
+
+    onMounted(() => {
+      axios.get("/users/user-profile/").then((resp) => {
+        var data = resp.data as Array<User>
+        user.value = data[0];
+      });
+      getBoards()
     });
 
     return {
       user,
       tab: ref("borders"),
       boards,
+      addBoard,
+      addPin,
+      closeMenu,
+      closePin,
     };
   },
-  // data() {
-  //   return {
-  //     tab: ref("borders"),
-  //     mail: "mailbox@mail.com",
-  //     NameProfile: "Евгений Панасенко",
-  //     Subscribers: "10",
-  //     Subscriptions: "10",
-  //     vk: "http://vk.com",
-  //     fb: "http://facebook.com",
-  //   };
-  // },
-  components: {},
+  components: {
+    AddBoardMenu,
+    AddPinMenu
+  },
 });
 </script>
 

@@ -56,8 +56,9 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/board",
+    path: "/board/:id",
     name: "Board",
+    props: true,
     component: Board,
     meta:{
       requiresAuth: true

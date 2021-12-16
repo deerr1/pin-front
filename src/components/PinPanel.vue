@@ -41,7 +41,11 @@
           </q-item>
         </template>
         <template v-slot:after-options>
-          <q-btn icon="add" class="full-width" label="Добавить доску" />
+          <q-btn icon="add" class="full-width" label="Добавить доску" @click="addBoard = true"/>
+        </template>
+        <template v-slot:no-option>
+            <q-item class="text-body1 text-grey"> Нет досок </q-item>
+            <q-btn icon="add" class="full-width" label="Добавить доску" />
         </template>
       </q-select>
       <q-btn
@@ -54,6 +58,7 @@
       />
     </div>
   </div>
+  <AddBoardMenu :addBoard="addBoard" @closes="closeMenu"></AddBoardMenu>
 </template>
 
 <script lang="ts">
@@ -61,6 +66,7 @@ import { exportFile } from "quasar";
 import { uid, useQuasar } from "quasar";
 import { copyToClipboard } from "quasar";
 import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
+import AddBoardMenu from "./AddBoardMenu.vue"
 import axios from "axios";
 import { useStore } from "vuex";
 
@@ -94,6 +100,7 @@ export default defineComponent({
     const store = useStore();
     const model = ref<Board | null>(null);
     const $q = useQuasar();
+    const addBoard = ref<boolean>(false)
 
     const boards = ref<Array<UserBoard>>();
 
@@ -121,10 +128,13 @@ export default defineComponent({
     }
 
     function SaveBoard() {
-        console.log({ "pin": props.id, "board": model.value?.id })
+      console.log({ pin: props.id, board: model.value?.id });
       if (model.value != null) {
         axios
-          .post("/pins/user-board-pin/", { "pin": props.id, "board": model.value?.id })
+          .post("/pins/user-add-pin-on-board/", {
+            pin: props.id,
+            board: model.value?.id,
+          })
           .then(() => {
             $q.notify({
               position: "top",
@@ -137,13 +147,24 @@ export default defineComponent({
       }
     }
 
-    onMounted(() => {
+    function closeMenu(action:boolean) {
+      addBoard.value = false
+      if (action==true){
+        getBoards()
+      }
+    }
+
+    function getBoards() {
       if (store.getters.isLoggedIn) {
         axios.get("/pins/user-boards/").then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
         });
       }
+    }
+
+    onMounted(() => {
+      getBoards()
     });
 
     return {
@@ -153,8 +174,13 @@ export default defineComponent({
       model,
       store,
       boards,
+      addBoard,
+      closeMenu,
     };
   },
+  components:{
+    AddBoardMenu
+  }
 });
 </script>
 

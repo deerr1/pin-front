@@ -13,7 +13,7 @@
           @click="this.$router.push('/')"
         />
       </q-toolbar-title>
-      <div class="absolute-center" id="search">
+      <div class="absolute-center" id="search" style="witdh:100px">
         <q-input
           id="search"
           rounded
@@ -45,7 +45,7 @@
         />
         <q-btn-dropdown class="text-orange" color="black" icon="person">
           <q-list>
-            <q-item clickable v-close-popup @click="this.$router.push('Profile')">
+            <q-item clickable v-close-popup @click="this.$router.push({name:'Profile'})">
               <q-item-section>
                 <q-item-label >Профиль</q-item-label>
               </q-item-section>
@@ -84,7 +84,7 @@ export default {
     function logout() {
       store.dispatch("logout").then(() => router.push("/login"));
     }
-    
+
     return {
       login,
       logout,
@@ -108,6 +108,6 @@ export default {
   margin-left: 15px;
 }
 #search {
-  width: 1000px;
+  width: 40vw;
 }
 </style>
