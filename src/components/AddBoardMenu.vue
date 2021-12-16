@@ -60,7 +60,7 @@ export default defineComponent({
       axios
         .post("/pins/user-changed-board/", {
           "name": nameBoard.value,
-          "access": typeBoard.value == "Открытая" ? 1 : 2,
+          "access": typeBoard.value == "Открытая" ? 0 : 1,
         })
         .then(() => {
           close(true);

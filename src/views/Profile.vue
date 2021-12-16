@@ -93,7 +93,7 @@
                 <q-img :src="board.board.img" width="100%" height="100%" @click="this.$router.push({name: 'Board', params: {'id': board.board.id}})">
                   <div class="absolute-bottom text-subtitle1 text-center">
                     {{ board.board.name }}
-                    <q-icon v-if="board.board.access == 2" name="lock" />
+                    <q-icon v-if="board.board.access == 1" name="lock" />
                     <q-icon v-else name="lock_open" />
                   </div>
                 </q-img>
