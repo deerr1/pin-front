@@ -45,7 +45,7 @@
         </template>
         <template v-slot:no-option>
             <q-item class="text-body1 text-grey"> Нет досок </q-item>
-            <q-btn icon="add" class="full-width" label="Добавить доску" />
+            <q-btn icon="add" class="full-width" label="Добавить доску"  @click="addBoard = true"/>
         </template>
       </q-select>
       <q-btn
