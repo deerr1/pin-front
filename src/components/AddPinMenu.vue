@@ -162,6 +162,7 @@ import store from "@/store";
 import AddBoardMenu from "./AddBoardMenu.vue";
 import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
 import axios from "axios";
+import { useStore } from "vuex";
 
 interface Board {
   id: number | null;
@@ -201,6 +202,7 @@ export default defineComponent({
     const model = ref<Board | null>(null);
     const addBoard = ref<boolean>(false);
     const selectedFile = ref();
+    const store = useStore()
 
     function fileSelected(file: any) {
       console.log(file[0]);
@@ -220,7 +222,7 @@ export default defineComponent({
 
     function getBoards() {
       if (store.getters.isLoggedIn) {
-        axios.get("/pins/user-boards/").then((resp) => {
+        axios.get("/pins/user-boards/"+store.getters.user).then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
         });

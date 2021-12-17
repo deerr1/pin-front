@@ -1,7 +1,7 @@
 <template>
   <!-- Тут работа над аватаром и кнопкой настроек -->
   <div class="avatar">
-    <q-avatar class="" size="200px" font-size="px">
+    <q-avatar class="" size="200px" font-size="200px">
       <img
         :src="user?.avatar ? user.avatar : require('../img/noImage.svg.png')"
       />
@@ -16,7 +16,7 @@
         background="black"
         style="top: 8px; left: 200px"
         icon="settings"
-        @click="this.$router.push('Settings')"
+        @click="this.$router.push({name:'Settings'})"
       />
     </q-avatar>
   </div>

@@ -2,7 +2,7 @@
   <div class="column content-center">
     <div class="row justify-center">
       <q-avatar
-        style="width: 120px; height: 120px; margin: 25px 25px 25px 90px"
+        size="150px"
       >
         <img
           src="https://www.factroom.ru/wp-content/uploads/2019/06/10-faktov-o-evgenii-ponasenkove-kotoryj-svodit-vsekh-s-uma-1250x883.jpg"
