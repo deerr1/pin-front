@@ -45,7 +45,7 @@
         />
         <q-btn-dropdown class="text-orange" color="black" icon="person">
           <q-list>
-            <q-item clickable v-close-popup @click="this.$router.push({name:'Profile'})">
+            <q-item clickable v-close-popup @click="this.$router.push({name:'Profile', params:{username: store.getters.user}})">
               <q-item-section>
                 <q-item-label >Профиль</q-item-label>
               </q-item-section>
@@ -75,6 +75,16 @@
 import { computed, ref } from "@vue/reactivity";
 import router from "@/router";
 import { useStore } from "vuex";
+import { onMounted } from '@vue/runtime-core';
+import axios from 'axios';
+interface User {
+  id: number | null;
+  username: string | null;
+  email: string | null;
+  avatar: string | null;
+  isYou: boolean | null;
+}
+
 export default {
   setup() {
     const store = useStore();
@@ -88,7 +98,7 @@ export default {
     return {
       login,
       logout,
-      store
+      store,
     };
   },
 };

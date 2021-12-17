@@ -7,6 +7,7 @@
       />
       <!-- name там имя иконки надо писать -->
       <q-btn
+      v-if="user?.isYou"
         flat
         round
         class="absolute all-pointer-events"
@@ -29,20 +30,6 @@
     <div class="mail">
       {{ user?.email }}
     </div>
-
-    <!-- <div class="Profilinf">
-      <div class="AnotherUsers">
-        <div class="Subscribers">{{ Subscribers }} подпичиков</div>
-        <div class="Subscriptions">{{ Subscriptions }} подписок</div>
-      </div>
-    </div> -->
-
-    <!-- <div class="q-pa-md">
-      <div class="Links">
-        <a :href="vk"><img src="../img/vk.png" /></a>
-        <a :href="fb"><img src="../img/fb.png" /></a>
-      </div>
-    </div> -->
   </div>
 
   <!-- Тут блок с разделами -->
@@ -59,7 +46,7 @@
           narrow-indicator
         >
           <q-tab name="borders" label="Мои доски" />
-          <q-tab name="saved" label="Сохраненные доски" />
+          <q-tab v-if="user?.isYou" name="saved" label="Сохраненные доски" />
         </q-tabs>
 
         <q-separator />
@@ -67,7 +54,7 @@
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="borders">
             <div class="Button">
-              <q-btn-dropdown round color="orange" icon="add">
+              <q-btn-dropdown v-if="user?.isYou" round color="orange" icon="add">
                 <q-list bordered>
                   <q-item clickable v-ripple @click="addPin=true">
                     <div class="text-body1">
@@ -112,7 +99,7 @@
 
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted, PropType } from "vue";
 import AddBoardMenu from "../components/AddBoardMenu.vue"
 import AddPinMenu from "../components/AddPinMenu.vue"
 import { ref } from "vue";
@@ -122,6 +109,7 @@ interface User {
   username: string | null;
   email: string | null;
   avatar: string | null;
+  isYou: boolean | null;
 }
 
 interface Board {
@@ -137,14 +125,20 @@ interface UserBoard {
 }
 
 export default defineComponent({
-  setup() {
+  props:{
+    username:{
+      required: true,
+      type: Object as PropType<string>
+    }
+  },
+  setup(props) {
     const user = ref<User>();
     const boards = ref<Array<UserBoard>>();
     const addBoard = ref<boolean>(false)
     const addPin = ref<boolean>(false)
 
     function getBoards() {
-      axios.get("/pins/user-boards/").then((resp) => {
+      axios.get("/pins/user-boards/"+props.username).then((resp) => {
         var data = resp.data as Array<UserBoard>;
         boards.value = data;
       });
@@ -165,11 +159,13 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      axios.get("/users/user-profile/").then((resp) => {
-        var data = resp.data as Array<User>
-        user.value = data[0];
-      });
-      getBoards()
+      axios.get("/users/user-profile/"+props.username).then((resp) => {
+        var data = resp.data as User
+        user.value = data;
+      })
+      .then(()=>{
+        getBoards()
+      })
     });
 
     return {

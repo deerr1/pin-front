@@ -156,7 +156,7 @@ export default defineComponent({
 
     function getBoards() {
       if (store.getters.isLoggedIn) {
-        axios.get("/pins/user-boards/").then((resp) => {
+        axios.get("/pins/user-boards/"+store.getters.user).then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
         });

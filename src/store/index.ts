@@ -6,19 +6,22 @@ interface State {
   status: string,
   accessToken: string,
   refreshToken: string,
+  user: string
 }
 
 const state = reactive<State>({
   status: localStorage.getItem('token')!='' ? 'succes' : '' as string,
   accessToken: localStorage.getItem('access_token') || '' as string,
-  refreshToken: localStorage.getItem('refresh_token') || '' as string
+  refreshToken: localStorage.getItem('refresh_token') || '' as string,
+  user: localStorage.getItem('user') || '' as string
 })
 
 export default createStore({
   state: state,
   getters:{
     isLoggedIn: state => state.accessToken !== '',
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    user: state => state.user
   },
   mutations: {
     auth_request(state: State){
@@ -58,6 +61,15 @@ export default createStore({
           localStorage.removeItem('token')
           reject(err)
         })
+        .then(()=>{
+        axios.get('/users/user/')
+        .then((resp)=>{
+        let data = resp.data as any
+        localStorage.setItem('user', data.username)
+        state.user = data.username
+      })
+    })
+
       })
     },
     registration({commit}, user){
@@ -79,6 +91,7 @@ export default createStore({
         commit('logout');
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user')
         delete axios.defaults.headers.common['Authorization']
         resolve(null)
       })

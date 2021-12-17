@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="row col-12 q-mx-xl q-mb-sm self-end">
-            <q-avatar class="" size="60px" font-size="60px">
+            <q-avatar class="" size="60px" font-size="60px" @click="this.$router.push({name:'Profile', params:{username: pin?.user.username}})">
               <img :src="pin?.user.avatar ? pin?.user.avatar : require('../img/noImage.svg.png')" />
             </q-avatar>
             <div class="body-text1 text-weight-bold q-ml-lg self-center col-5">
@@ -40,10 +40,6 @@ import axios from "axios";
 import PinPanel from "../components/PinPanel.vue";
 import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
 
-interface Category {
-  id: number;
-  name: string;
-}
 interface User {
   id: number
   username: string,
@@ -55,8 +51,8 @@ interface Pin {
   description: string;
   image: string;
   upload_date: Date;
-  category: Array<Category>;
   user: User
+  isYou: boolean
 }
 
 export default defineComponent({
@@ -73,8 +69,8 @@ export default defineComponent({
 
     onMounted(() => {
       axios.get("/pins/pin-detail/" + props.id).then((resp) => {
-        var data = resp.data as Array<Pin>;
-        pin.value = data[0];
+        var data = resp.data as Pin;
+        pin.value = data;
       })
       .catch((e)=>{
         error.value = true
