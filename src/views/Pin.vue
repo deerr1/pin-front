@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="row col-12 q-mx-xl q-mb-sm self-end">
-            <q-avatar class="" size="60px" font-size="60px" @click="this.$router.push({name:'Profile', params:{username: pin?.user.username}})">
+            <q-avatar clickable class="" size="60px" font-size="60px" @click="this.$router.push({name:'Profile', params:{username: pin?.user.username}})">
               <img :src="pin?.user.avatar ? pin?.user.avatar : require('../img/noImage.svg.png')" />
             </q-avatar>
             <div class="body-text1 text-weight-bold q-ml-lg self-center col-5">

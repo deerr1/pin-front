@@ -13,7 +13,7 @@
     </div>
     <div
       class="row justify-between col-9 self-center"
-      v-if="store.getters.isLoggedIn"
+      v-if="store.getters.isLoggedIn && !isYou"
     >
       <q-select
         class="col-6"
@@ -41,11 +41,21 @@
           </q-item>
         </template>
         <template v-slot:after-options>
-          <q-btn icon="add" class="full-width" label="Добавить доску" @click="addBoard = true"/>
+          <q-btn
+            icon="add"
+            class="full-width"
+            label="Добавить доску"
+            @click="addBoard = true"
+          />
         </template>
         <template v-slot:no-option>
-            <q-item class="text-body1 text-grey"> Нет досок </q-item>
-            <q-btn icon="add" class="full-width" label="Добавить доску"  @click="addBoard = true"/>
+          <q-item class="text-body1 text-grey"> Нет досок </q-item>
+          <q-btn
+            icon="add"
+            class="full-width"
+            label="Добавить доску"
+            @click="addBoard = true"
+          />
         </template>
       </q-select>
       <q-btn
@@ -57,8 +67,13 @@
         @click="SaveBoard()"
       />
     </div>
+    <div v-if="isYou" class="row justify-between col-8 self-center q-mr-lg">
+      <q-btn color="orange" icon="edit" label="Изменить" @click="editPin = true" />
+      <q-btn color="red" icon="delete" label="Удалить" @click="deletePin" />
+    </div>
   </div>
   <AddBoardMenu :addBoard="addBoard" @closes="closeMenu"></AddBoardMenu>
+  <EditPin :editPin="editPin" :pin="props?.id" :key="props?.id" @close="closePin"></EditPin>
 </template>
 
 <script lang="ts">
@@ -66,7 +81,8 @@ import { exportFile } from "quasar";
 import { uid, useQuasar } from "quasar";
 import { copyToClipboard } from "quasar";
 import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
-import AddBoardMenu from "./AddBoardMenu.vue"
+import AddBoardMenu from "./AddBoardMenu.vue";
+import EditPin from "./EditPin.vue";
 import axios from "axios";
 import { useStore } from "vuex";
 
@@ -96,13 +112,34 @@ export default defineComponent({
       type: Object as PropType<number>,
     },
   },
-  setup(props) {
+  setup(props, {emit}) {
     const store = useStore();
     const model = ref<Board | null>(null);
     const $q = useQuasar();
-    const addBoard = ref<boolean>(false)
+    const addBoard = ref<boolean>(false);
+    const editPin = ref<boolean>(false)
+    const isYou = ref<boolean>(false);
 
     const boards = ref<Array<UserBoard>>();
+
+    function deletePin() {
+      $q.notify({
+        position: "center",
+        type: "warning",
+        message: "Вы действительно хотите удалить картинку?",
+        closeBtn: true,
+        timeout: 20000,
+        actions: [
+          {
+            label: "Удалить",
+            color: "red",
+            handler: () => {
+              console.log("sddsdsd");
+            },
+          },
+        ],
+      });
+    }
 
     function download() {
       axios
@@ -147,16 +184,23 @@ export default defineComponent({
       }
     }
 
-    function closeMenu(action:boolean) {
-      addBoard.value = false
-      if (action==true){
-        getBoards()
+    function closeMenu(action: boolean) {
+      addBoard.value = false;
+      if (action == true) {
+        getBoards();
+      }
+    }
+
+    function closePin(action: boolean) {
+      editPin.value = false;
+      if (action == true){
+
       }
     }
 
     function getBoards() {
       if (store.getters.isLoggedIn) {
-        axios.get("/pins/user-boards/"+store.getters.user).then((resp) => {
+        axios.get("/pins/user-boards/" + store.getters.user).then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
         });
@@ -164,7 +208,12 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      getBoards()
+      axios.get("/users/user-profile/" + store.getters.user).then((resp) => {
+        let data = resp.data as any;
+        isYou.value = data.isYou;
+      });
+
+      getBoards();
     });
 
     return {
@@ -176,11 +225,17 @@ export default defineComponent({
       boards,
       addBoard,
       closeMenu,
+      closePin,
+      isYou,
+      deletePin,
+      editPin,
+      props,
     };
   },
-  components:{
-    AddBoardMenu
-  }
+  components: {
+    AddBoardMenu,
+    EditPin,
+  },
 });
 </script>
 
