@@ -13,7 +13,7 @@
     </div>
     <div
       class="row justify-between col-9 self-center"
-      v-if="store.getters.isLoggedIn && !isYou"
+      v-if="store.getters.isLoggedIn"
     >
       <q-select
         class="col-6"
@@ -67,7 +67,7 @@
         @click="SaveBoard()"
       />
     </div>
-    <div v-if="isYou" class="row justify-between col-8 self-center q-mr-lg">
+    <div v-if="!isYou" class="row justify-between col-8 self-center q-mr-lg">
       <q-btn color="orange" icon="edit" label="Изменить" @click="editPin = true" />
       <q-btn color="red" icon="delete" label="Удалить" @click="deletePin" />
     </div>
