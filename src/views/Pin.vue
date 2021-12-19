@@ -11,20 +11,22 @@
             :file="pin?.image"
             :link="path"
             :id="pin?.id"
+            :isYou="pin?.isYou"
+            :key="pin?.id"
             class="col-12 q-mx-sm"
           ></PinPanel>
           <div class="column q-mx-sm col-12">
-            <div class="self-center q-my-sm text-h5">{{ pin?.name }}</div>
-            <div class="text-body1 q-my-sm">{{ pin?.description }}</div>
-            <div class="q-my-sm">
+            <div class="self-center q-my-sm text-h4">{{ pin?.name }}</div>
+            <div class="text-center text-h5  q-my-sm">{{ pin?.description }}</div>
+            <div align="right" class="q-my-sm text-h6 q-mr-xl">
               {{ new Date(pin?.upload_date).toLocaleDateString("ru-Ru") }}
             </div>
           </div>
           <div class="row col-12 q-mx-xl q-mb-sm self-end">
-            <q-avatar clickable class="" size="60px" font-size="60px" @click="this.$router.push({name:'Profile', params:{username: pin?.user.username}})">
+            <q-avatar clickable class="" size="80px" font-size="60px" @click="this.$router.push({name:'Profile', params:{username: pin?.user.username}})">
               <img :src="pin?.user.avatar ? pin?.user.avatar : require('../img/noImage.svg.png')" />
             </q-avatar>
-            <div class="body-text1 text-weight-bold q-ml-lg self-center col-5">
+            <div class="text-h5 body-text1 text-weight-bold q-ml-lg self-center col-5">
               {{pin?.user.username}}
             </div>
           </div>

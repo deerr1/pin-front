@@ -13,8 +13,8 @@
         class="absolute all-pointer-events"
         size="18px"
         name="settings"
-        background="black"
-        style="top: 8px; left: 200px"
+        color="orange"
+        style="top: 8px; left: 200px;"
         icon="settings"
         @click="this.$router.push({name:'Settings'})"
       />

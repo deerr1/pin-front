@@ -7,9 +7,9 @@
         color="black"
         icon="file_download"
         @click="download"
-        size="15px"
+        size="20px"
       />
-      <q-btn flat round color="black" icon="link" @click="copy()" size="15px" />
+      <q-btn flat round color="black" icon="link" @click="copy()" size="20px" />
     </div>
     <div
       class="row justify-between col-9 self-center"
@@ -67,13 +67,8 @@
         @click="SaveBoard()"
       />
     </div>
-    <div v-if="false" class="row justify-between col-8 self-center q-mr-lg">
-      <q-btn color="orange" icon="edit" label="Изменить" @click="editPin = true" />
-      <q-btn color="red" icon="delete" label="Удалить" @click="deletePin" />
-    </div>
   </div>
   <AddBoardMenu :addBoard="addBoard" @closes="closeMenu"></AddBoardMenu>
-  <EditPin :editPin="editPin" :pin="props?.id" :key="props?.id" @close="closePin"></EditPin>
 </template>
 
 <script lang="ts">
@@ -82,7 +77,6 @@ import { uid, useQuasar } from "quasar";
 import { copyToClipboard } from "quasar";
 import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
 import AddBoardMenu from "./AddBoardMenu.vue";
-import EditPin from "./EditPin.vue";
 import axios from "axios";
 import { useStore } from "vuex";
 
@@ -111,35 +105,19 @@ export default defineComponent({
       required: true,
       type: Object as PropType<number>,
     },
+    isYou: {
+      required: true,
+      type: Object as PropType<boolean>,
+    },
   },
   setup(props, {emit}) {
     const store = useStore();
     const model = ref<Board | null>(null);
-    const $q = useQuasar();
     const addBoard = ref<boolean>(false);
     const editPin = ref<boolean>(false)
-    const isYou = ref<boolean>(false);
-
+    const isYou = ref<boolean>(props.isYou);
+    const $q = useQuasar()
     const boards = ref<Array<UserBoard>>();
-
-    function deletePin() {
-      $q.notify({
-        position: "center",
-        type: "warning",
-        message: "Вы действительно хотите удалить картинку?",
-        closeBtn: true,
-        timeout: 20000,
-        actions: [
-          {
-            label: "Удалить",
-            color: "red",
-            handler: () => {
-              console.log("sddsdsd");
-            },
-          },
-        ],
-      });
-    }
 
     function download() {
       axios
@@ -191,28 +169,19 @@ export default defineComponent({
       }
     }
 
-    function closePin(action: boolean) {
-      editPin.value = false;
-      if (action == true){
-
-      }
-    }
+    
 
     function getBoards() {
       if (store.getters.isLoggedIn) {
         axios.get("/pins/user-boards/" + store.getters.user).then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
+          model.value = boards.value[0]?.board
         });
       }
     }
 
     onMounted(() => {
-      axios.get("/users/user-profile/" + store.getters.user).then((resp) => {
-        let data = resp.data as any;
-        isYou.value = data.isYou;
-      });
-
       getBoards();
     });
 
@@ -225,16 +194,13 @@ export default defineComponent({
       boards,
       addBoard,
       closeMenu,
-      closePin,
       isYou,
-      deletePin,
       editPin,
       props,
     };
   },
   components: {
     AddBoardMenu,
-    EditPin,
   },
 });
 </script>

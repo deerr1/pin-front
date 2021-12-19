@@ -50,6 +50,11 @@
                 <q-item-label >Профиль</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item clickable v-close-popup @click="this.$router.push({name:'Settings'})">
+              <q-item-section>
+                <q-item-label >Настройки</q-item-label>
+              </q-item-section>
+            </q-item>
             <q-item clickable v-close-popup @click="logout()">
               <q-item-section>
                 <q-item-label>Выйти</q-item-label>

@@ -22,7 +22,6 @@
             >
               <template v-slot:header="scope">
                 <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
-                  
                   <q-btn
                     v-if="scope.uploadedFiles.length > 0"
                     icon="done_all"
@@ -62,8 +61,7 @@
                   </q-btn>
                 </div>
               </template>
-              <template>
-              </template>
+              <template> </template>
             </q-uploader>
           </div>
           <div class="col-6">
@@ -73,7 +71,6 @@
                 v-model="model"
                 :options="boards"
                 label="Доска"
-                
                 outlined
               >
                 <template #selected>
@@ -192,6 +189,10 @@ export default defineComponent({
       required: true,
       type: Object as PropType<boolean>,
     },
+    board: {
+      required: false,
+      type: Object as PropType<number>,
+    },
   },
   setup(props, { emit }) {
     const filesImages = ref<File | null>(null);
@@ -199,13 +200,12 @@ export default defineComponent({
     const boards = ref<Array<UserBoard>>();
     const namePin = ref<string>();
     const description = ref<string>();
-    const model = ref<Board | null>(null);
+    const model = ref<Board>();
     const addBoard = ref<boolean>(false);
     const selectedFile = ref();
-    const store = useStore()
+    const store = useStore();
 
     function fileSelected(file: any) {
-      console.log(file[0]);
       selectedFile.value = file[0];
       // console.log(selectedFile.value)
     }
@@ -222,9 +222,16 @@ export default defineComponent({
 
     function getBoards() {
       if (store.getters.isLoggedIn) {
-        axios.get("/pins/user-boards/"+store.getters.user).then((resp) => {
+        axios.get("/pins/user-boards/" + store.getters.user).then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
+          if (props.board != null) {
+            model.value = boards.value.find(
+              (e) => e.board.id == props.board
+            )?.board;
+          } else {
+            model.value = boards.value[0]?.board;
+          }
         });
       }
     }
@@ -247,7 +254,6 @@ export default defineComponent({
     });
 
     function close(action: boolean) {
-      model.value = null;
       filesImages.value = null;
       imageUrl.value = "";
       namePin.value = "";

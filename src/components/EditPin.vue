@@ -57,6 +57,7 @@
               </div>
               <div class="row col-12 justify-between">
               <q-input
+                v-if="isYou"
                 bg-color="white"
                 rounded
                 outlined
@@ -68,6 +69,7 @@
                 ]"
               />
               <q-input
+                v-if="isYou"
                 bg-color="white"
                 outlined
                 autogrow
@@ -81,8 +83,9 @@
               </div>
             </div>
           </div>
-          <div class="row self-center q-mx-lg q-mt-xl">
-            <q-btn label="изменить" type="submit" color="orange" />
+          <div class="row justify-between self-center q-mx-lg q-mt-xl">
+            <q-btn label="Сохранить" type="submit" color="orange"  class="q-mx-sm"/>
+            <q-btn label="Удалить" color="negative" @click="showWraning"/>
             <q-btn
               label="Закрыть окно"
               type="reset"
@@ -103,6 +106,7 @@ import { defineComponent, onMounted, PropType, ref } from "@vue/runtime-core";
 import AddBoardMenu from "./AddBoardMenu.vue"
 import axios from "axios";
 import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 interface Board {
   id: number | null;
@@ -119,7 +123,8 @@ interface Pin {
     id: number,
     name: string,
     description: string,
-    board: number
+    board: Array<Board>,
+    isYou: boolean
 }
 
 export default defineComponent({
@@ -129,6 +134,10 @@ export default defineComponent({
       type: Object as PropType<boolean>,
     },
     pin: {
+        required: true,
+        type: Object as PropType<number>
+    },
+    board: {
         required: true,
         type: Object as PropType<number>
     }
@@ -141,10 +150,14 @@ export default defineComponent({
     const description = ref<string|undefined>("");
     const addBoard = ref<boolean>(false)
     const pin = ref<Pin>();
+    const board = ref<Board>();
+    const $q = useQuasar()
+    const isYou = ref<boolean>();
 
     function close(action: boolean) {
-        namePin.value = pin.value?.name
-        description.value = pin.value?.description
+      namePin.value = pin.value?.name
+      description.value = pin.value?.description
+      model.value = board.value
       emit("close", action);
     }
 
@@ -157,28 +170,60 @@ export default defineComponent({
 
     function getBoards() {
       if (store.getters.isLoggedIn) {
-        axios.get("/pins/user-boards/" + store.getters.user).then((resp) => {
+        axios.get("/pins/user-boards/" + store.getters.user)
+        .then((resp) => {
           var data = resp.data as Array<UserBoard>;
           boards.value = data;
+          var d = data.find(e => e.board.id == props.board)
+          model.value = d?.board
+          board.value = d?.board
+
         });
       }
     }
 
     function update() {
-        let formData = new FormData()
-        formData.append("board_id", ""+model.value?.id)
-        formData.append("pin_id", ""+props.pin)
-        formData.append("name", ""+namePin.value)
-        formData.append("description", ""+description.value)
-        let config = { headers: { "Content-Type": "multipart/form-data" } };
-        axios.put("/pins/user-changed-board/", formData, config)
+        let data = {
+          "old_board_id": board.value?.id,
+          "new_board_id": model.value?.id,
+          "pin_id": props.pin,
+          "name": namePin.value,
+          "description": description.value
+        }
+        axios.put("/pins/pin-detail/", data)
         .then(()=>{
             close(true)
         })
     }
 
+    function showWraning() {
+      console.log(pin.value)
+      $q.notify({
+        position: "center",
+        type: "warning",
+        message: "Вы действительно хотите удалить картинку?",
+        closeBtn: true,
+        timeout: 20000,
+        actions: [
+          {
+            label: "Удалить",
+            color: "red",
+            handler: () => {
+             deletePin()
+            },
+          },
+        ],
+      });
+    }
+
+    function deletePin() {
+      axios.delete("/pins/pin-detail/"+props.board+"/"+props.pin)
+      .then(()=>{
+        close(true)
+      })
+    }
+
     onMounted(()=>{
-        getBoards()
         axios.get("/pins/pin-detail/"+props.pin)
         .then((resp)=>{
             let data = resp.data as Pin
@@ -186,6 +231,9 @@ export default defineComponent({
             pin.value = data
             namePin.value = pin.value.name
             description.value = pin.value.description
+            console.log(pin.value.isYou)
+            isYou.value = pin.value.isYou
+            getBoards()
         })
     })
 
@@ -193,12 +241,14 @@ export default defineComponent({
       close,
       closeMenuBoard,
       update,
+      showWraning,
       props,
       namePin,
       description,
       model,
       boards,
       addBoard,
+      isYou,
     };
   },
   components:{
