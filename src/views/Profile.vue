@@ -93,7 +93,7 @@
     </div>
   </div>
   <AddBoardMenu :addBoard="addBoard" @closes="closeMenu"></AddBoardMenu>
-  <AddPinMenu :addPin="addPin" @close="closePin"></AddPinMenu>
+  <AddPinMenu :addPin="addPin" @close="closePin" :key="boards"></AddPinMenu>
 </template>
 
 <script lang="ts">
