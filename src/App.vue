@@ -1,5 +1,5 @@
 <template>
-  <Header :key="$store.getters.isLoggedIn"/>
+  <Header :key="$store.getters.user"/>
   <div>
     <router-view :key="$route.path"/>
   </div>

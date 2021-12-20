@@ -21,7 +21,7 @@ export default createStore({
   getters:{
     isLoggedIn: state => state.accessToken !== '',
     authStatus: state => state.status,
-    user: state => state.user
+    user: state => localStorage.getItem('user')
   },
   mutations: {
     auth_request(state: State){
@@ -93,6 +93,12 @@ export default createStore({
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user')
         delete axios.defaults.headers.common['Authorization']
+        resolve(null)
+      })
+    },
+    rename({commit}, username){
+      return new Promise((resolve, reject) =>{
+        localStorage.setItem("user", username)
         resolve(null)
       })
     }

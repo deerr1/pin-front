@@ -7,6 +7,7 @@ import Profile from "../views/Profile.vue";
 import Settings from "../views/Settings.vue";
 import Board from "../components/Board.vue";
 import Pin from "../views/Pin.vue"
+import Search from "../views/Search.vue"
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
@@ -70,6 +71,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "Pin",
     props: true,
     component: Pin,
+  },
+  {
+    path: "/search/:searchString",
+    name: "Search",
+    props: true,
+    component: Search,
   },
 ];
 

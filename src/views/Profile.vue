@@ -46,7 +46,6 @@
           narrow-indicator
         >
           <q-tab name="borders" label="Мои доски" />
-          <q-tab v-if="user?.isYou" name="saved" label="Сохраненные доски" />
         </q-tabs>
 
         <q-separator />

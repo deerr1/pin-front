@@ -1,7 +1,6 @@
 <template>
-  <q-title v-if="board != undefind" class="border_title">
+  <q-title v-if="board != undefind" class="border_title row">
     <div class="row">
-
     <q-icon class="self-center q-mr-lg" size="30px" :name="board?.access==1?'lock':'lock_open'" />
     <h4>{{ board?.name }}</h4>
     </div>
@@ -17,6 +16,9 @@
     />
   </q-title>
   <q-separator />
+  <div v-if="board?.isYou && pins?.length > 0" class="row justify-center">
+    <q-btn class="col-2 q-my-lx" color="orange" icon="add" label="Добавить" @click="addPin=true" />
+  </div>
   <div class="main">
     <div v-if="(board?.isYou==false && board?.access == 1) || board == undefind" class="text-center text-h3" style="width: 80vw">
         Такой доски нет

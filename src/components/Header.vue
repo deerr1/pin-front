@@ -18,10 +18,14 @@
           id="search"
           rounded
           outlined
-          v-model="text"
+          v-model="search"
           bg-color="white"
           label="Поиск пинов"
           :dense="true"
+          v-on:keyup.enter="()=>{
+            this.$router.push({name:'Search', params:{searchString: search}})
+            search=''
+           }"
         >
           <template v-slot:prepend>
             <q-icon name="search" />
@@ -93,6 +97,7 @@ interface User {
 export default {
   setup() {
     const store = useStore();
+    const search = ref<string>()
     function login() {
       router.push("/login");
     }
@@ -104,6 +109,7 @@ export default {
       login,
       logout,
       store,
+      search,
     };
   },
 };

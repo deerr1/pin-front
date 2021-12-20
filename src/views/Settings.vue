@@ -72,6 +72,7 @@ import { onMounted, ref } from "@vue/runtime-core";
 import axios from "axios";
 import AddAvatar from "../components/AddAvatar.vue";
 import { useQuasar } from 'quasar';
+import { useStore } from 'vuex';
 
 interface User {
   id: number;
@@ -88,6 +89,7 @@ export default {
     const addAvatar = ref<boolean>();
     const errorData = ref<boolean>(false);
     const $q = useQuasar()
+    const store = useStore()
 
     function getUser() {
       axios.get("/users/user/").then((resp) => {
@@ -97,6 +99,7 @@ export default {
         email.value = data.email;
         console.log(data);
         errorData.value = false
+        store.dispatch("rename", username.value)
       });
     }
 

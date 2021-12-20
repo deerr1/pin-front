@@ -6,9 +6,6 @@
           <div class="card-body" @click="this.$router.push({name: 'Pin', params: {id: card.id}})">
             <q-img :src="card.image" class="card-img" />
           </div>
-          <q-card-actions align="left">
-            <div class="text-h5">{{card.name}}</div>
-          </q-card-actions>
         </figure>
       </q-card>
     </div>
